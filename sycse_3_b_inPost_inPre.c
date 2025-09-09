@@ -238,14 +238,15 @@ void in_pre(char inexp[], char preexp[]) {
 
     for (i = j - 1; i >= 0; i--) {
         tkn = inexp[i];
-
+        #if 0
         if (tkn == '(') tkn = ')';
         else if (tkn == ')') tkn = '(';
-
+        #endif
         if (isalpha(tkn) || isdigit(tkn)) {
             temp[k++] = tkn;
         }
         else {
+            #if 0
             if (tkn == '(') {
                 push(tkn);
             }
@@ -255,6 +256,16 @@ void in_pre(char inexp[], char preexp[]) {
                 }
                 pop();
             }
+            #endif
+            if (tkn == ')') {
+                push(tkn);
+            }
+            else if (tkn == '(') {
+                while (!isEmpty() && peek() != ')') {
+                    temp[k++] = pop();
+            }
+    pop(); // remove ')'
+}
             else {
                 while (!isEmpty() && isp1(peek()) >= icp1(tkn)) {
                     temp[k++] = pop();
