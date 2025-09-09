@@ -22,25 +22,25 @@ int isFullS() {
     }
 }
 
-void push_str(char str[]) {
+void push_str(char str[MAX]) {
     if (isFullS()) {
-        printf("Stack Overflow\n");
+        printf("Stack is full!\n");
     } else {
         topS = topS + 1;
         strcpy(s[topS], str);
     }
 }
 
-void pop_str(char out[]) {
-    if (!isEmptyS()) {
-        strcpy(out, s[topS]);
-        topS = topS - 1;
+void pop_str(char str[MAX]) {
+    if (isEmptyS()) {
+        printf("Stack is empty!\n");
+        str[0] = '\0';
     } else {
-        out[0] = '\0';
+        strcpy(str, s[topS]);
+        topS = topS - 1;
     }
 }
 
-/* Prefix → Infix */
 void pre_infix(char pre[], char infix[]) {
     int l = strlen(pre);
     char x;
@@ -68,7 +68,6 @@ void pre_infix(char pre[], char infix[]) {
     pop_str(infix);
 }
 
-/* Prefix → Postfix */
 void pre_postfix(char pre[], char postfix[]) {
     int l = strlen(pre);
     char x;
@@ -95,31 +94,33 @@ void pre_postfix(char pre[], char postfix[]) {
 }
 
 int main() {
-    char pre[MAX], out[MAX];
+    char pre[MAX], result[MAX];
     int ch;
 
     printf("Enter a Prefix expression: ");
     scanf("%s", pre);
 
-    printf("Choose conversion:\n");
-    printf("1. Prefix to Infix\n");
-    printf("2. Prefix to Postfix\n");
+    printf("Enter your choice:\n");
+    printf("1. Convert to Infix\n");
+    printf("2. Convert to Postfix\n");
     scanf("%d", &ch);
 
     switch (ch) {
         case 1: {
-            pre_infix(pre, out);
-            printf("Infix Expression: %s\n", out);
+            pre_infix(pre, result);
+            printf("Infix Expression: %s\n", result);
             break;
         }
         case 2: {
-            pre_postfix(pre, out);
-            printf("Postfix Expression: %s\n", out);
+            pre_postfix(pre, result);
+            printf("Postfix Expression: %s\n", result);
             break;
         }
         default: {
-            printf("Invalid choice\n");
+            printf("Invalid choice!\n");
+            break;
         }
     }
+
     return 0;
 }

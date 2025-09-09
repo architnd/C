@@ -22,25 +22,25 @@ int isFullS() {
     }
 }
 
-void push_str(char str[]) {
+void push_str(char str[MAX]) {
     if (isFullS()) {
-        printf("Stack Overflow\n");
+        printf("Stack is full!\n");
     } else {
         topS = topS + 1;
         strcpy(s[topS], str);
     }
 }
 
-void pop_str(char out[]) {
-    if (!isEmptyS()) {
-        strcpy(out, s[topS]);
-        topS = topS - 1;
+void pop_str(char str[MAX]) {
+    if (isEmptyS()) {
+        printf("Stack is empty!\n");
+        str[0] = '\0';
     } else {
-        out[0] = '\0';
+        strcpy(str, s[topS]);
+        topS = topS - 1;
     }
 }
 
-/* Postfix → Infix */
 void post_infix(char post[], char infix[]) {
     int l = strlen(post);
     char x;
@@ -68,7 +68,6 @@ void post_infix(char post[], char infix[]) {
     pop_str(infix);
 }
 
-/* Postfix → Prefix */
 void post_prefix(char post[], char prefix[]) {
     int l = strlen(post);
     char x;
@@ -95,31 +94,33 @@ void post_prefix(char post[], char prefix[]) {
 }
 
 int main() {
-    char post[MAX], out[MAX];
+    char post[MAX], result[MAX];
     int ch;
 
     printf("Enter a Postfix expression: ");
     scanf("%s", post);
 
-    printf("Choose conversion:\n");
-    printf("1. Postfix to Infix\n");
-    printf("2. Postfix to Prefix\n");
+    printf("Enter your choice:\n");
+    printf("1. Convert to Infix\n");
+    printf("2. Convert to Prefix\n");
     scanf("%d", &ch);
 
     switch (ch) {
         case 1: {
-            post_infix(post, out);
-            printf("Infix Expression: %s\n", out);
+            post_infix(post, result);
+            printf("Infix Expression: %s\n", result);
             break;
         }
         case 2: {
-            post_prefix(post, out);
-            printf("Prefix Expression: %s\n", out);
+            post_prefix(post, result);
+            printf("Prefix Expression: %s\n", result);
             break;
         }
         default: {
-            printf("Invalid choice\n");
+            printf("Invalid choice!\n");
+            break;
         }
     }
+
     return 0;
 }
