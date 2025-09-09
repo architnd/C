@@ -38,7 +38,7 @@ void bubbleSort(struct student s1[60], int n){
 			}
 		}
 	}
-	printf("Number of passess : %d", pass-1);
+	printf("Number of passess : %d \n", pass-1);
 }
 void selectionSort(struct student s1[60], int n){
 	int pass = 1;
@@ -58,7 +58,7 @@ void selectionSort(struct student s1[60], int n){
 			pass++;
 		}
 	}
-	printf("Number of passess : %d", pass-1);
+	printf("Number of passess : %d \n", pass-1);
 }
 void insertionSort(struct student s1[60], int n) {
     int pass = 1;
@@ -74,7 +74,7 @@ void insertionSort(struct student s1[60], int n) {
 	display(s1, n);
 	pass++;
     }
-    printf("Number of passess : %d", pass-1);
+    printf("Number of passess : %d \n", pass-1);
 }
 void shellSort(struct student s1[60], int n) {
 	int pass = 1;

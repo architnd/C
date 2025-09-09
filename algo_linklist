@@ -1,0 +1,155 @@
+Algorithm create(*H)
+{
+   temp = H;
+   repeat until choice = 'y'
+   {
+       allocate memory to curr;
+       accept curr->data;
+       curr->next = NULL;
+       temp->next = curr;
+       temp = curr;     // temp = temp->next
+       Read choice;
+   }
+}
+
+Algorithm display(*H)
+{
+   if H->next == NULL
+        Print "List is empty"
+   else
+   {
+        curr = H->next;
+        while(curr != NULL)
+        {
+            Print curr->data;
+            curr = curr->next;
+        }
+   }
+}
+
+Algorithm len(*H)
+{
+   curr = H->next;
+   i = 0;
+   while(curr != NULL)
+   {
+        i++;
+        curr = curr->next;
+   }
+   return(i);
+}
+
+Algorithm Insertbypos(*H)
+{
+   i = 1; curr = H;
+   allocate memory for nnode;
+   read nnode->data and pos;
+   k = len();
+   if(pos > k+1)
+       Print "Data can't be inserted";
+   else
+   {
+       while(curr != NULL && i < pos)
+       {
+           i++;
+           curr = curr->next;
+       }
+       nnode->next = curr->next;
+       curr->next = nnode;
+   }
+}
+
+Algorithm delpos(*H)
+{
+   prev = H; ctr = 1;
+   curr = H->next;
+   read pos;
+   k = len();
+   if (k < pos)
+        Print "Data can't be deleted";
+   else
+   {
+       while(ctr < pos && curr != NULL)
+       {
+           ctr++;
+           prev = curr;
+           curr = curr->next;
+       }
+       temp = curr;
+       prev->next = curr->next;
+       curr->next = NULL;
+       free(temp);
+   }
+}
+
+Algorithm reverse(*H)
+{
+   prev = NULL;
+   curr = head->next;
+   while(curr != NULL)
+   {
+        future = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = future;
+   }
+   head->next = prev;
+}
+
+Algorithm sort(*H)
+{
+   len = len(H);
+   for i = 1 to len-1
+   {
+       prev = H;
+       curr = H->next;
+       for j = 0 to < len-i
+       {
+           temp = curr->next;
+           if(curr->data > temp->data)
+           {
+               prev->next = temp;
+               curr->next = temp->next;
+               temp->next = curr;
+               prev = temp;
+           }
+           else
+           {
+               prev = curr;
+               curr = curr->next;
+           }
+       }
+   }
+}
+
+Algorithm merge(*H1, *H2)
+{
+   curr1 = H1->next;
+   curr2 = H2->next;
+
+   if(curr1->data < curr2->data)
+   { temp = head1; flag = 1; }
+   else
+   { temp = head2; flag = 0; }
+
+   while(curr1 != NULL && curr2 != NULL)
+   {
+       if(curr1->data < curr2->data)
+       {
+           temp->next = curr1;
+           temp = curr1;
+           curr1 = curr1->next;
+       }
+       else
+       {
+           temp->next = curr2;
+           temp = curr2;
+           curr2 = curr2->next;
+       }
+   }
+   if(curr1 == NULL) temp->next = curr2;
+   if(curr2 == NULL) temp->next = curr1;
+
+   if(flag == 1) display(head1);
+   else display(head2);
+}

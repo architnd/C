@@ -1,0 +1,183 @@
+Algorithm isFull()
+{
+   if (top == MAXSIZE - 1)
+        return true;
+   else
+        return false;
+}
+
+Algorithm push(item)
+{
+   if (!isFull())
+   {
+       top = top + 1;
+       stack[top] = item;
+   }
+}
+
+Algorithm isEmpty()
+{
+   if (top == -1)
+        return true;
+   else
+        return false;
+}
+
+Algorithm pop()
+{
+   if (!isEmpty())
+   {
+       temp = stack[top];
+       top = top - 1;
+       return temp;
+   }
+}
+
+Algorithm in_post(inexp[])
+{
+   k = 0; i = 0;
+   tkn = inexp[i];
+   while (tkn != '\0')
+   {
+       if tkn is operand
+           postexp[k] = inexp[i]; k++;
+       else
+       {
+           if tkn == '('
+               push('(');
+           else if tkn == ')'
+           {
+               while ((tkn = pop()) != '(')
+               {
+                   postexp[k] = tkn; k++;
+               }
+           }
+           else
+           {
+               while (stack not empty && isp(stk[top]) >= icp(tkn))
+               {
+                   postexp[k] = pop(); k++;
+               }
+               push(tkn);
+           }
+       }
+       i++;
+       tkn = inexp[i];
+   }
+   while stack not empty
+   {
+       postexp[k] = pop(); k++;
+   }
+}
+
+Algorithm in_pre(inexp[])
+{
+   k=0; i=strlen(inexp)-1;
+   tkn=inexp[i];
+
+   while (i >= 0)
+   {
+       if tkn is operand
+           pre_exp[k]=inexp[i]; k++;
+       else
+       {
+           if tkn == ')'
+               push(')');
+           else if tkn == '('
+           {
+               while ((tkn=pop()) != ')')
+               {
+                   pre_exp[k]=tkn; k++;
+               }
+           }
+           else
+           {
+               while (stack not empty && isp(stk[top]) > icp(tkn))
+               {
+                   pre_exp[k]=pop(); k++;
+               }
+               push(tkn);
+           }
+       }
+       i--;
+       tkn=inexp[i];
+   }
+   while stack not empty
+       pre_exp[k]=pop(); k++;
+   // reverse pre_exp to get prefix
+}
+
+Algorithm Post_infx(E)
+   l = length(E)
+   for i = 0 to l-1
+   {
+       x = next_token(E)
+       case x:
+           operand → push(x)
+           operator →
+               op2 = pop()
+               op1 = pop()
+               E1 = strcat('(', op1, x, op2, ')')
+               push(E1)
+   }
+End
+
+Algorithm Post_pre(E)
+   l = length(E)
+   for i = 0 to l-1
+   {
+       x = next_token(E)
+       case x:
+           operand → push(x)
+           operator →
+               op2 = pop()
+               op1 = pop()
+               E1 = strcat(x, op1, op2)
+               push(E1)
+   }
+End
+
+Algorithm Pre_infx(E)
+   l = length(E)
+   for i = l-1 downto 0
+   {
+       x = next_token(E)
+       case x:
+           operand → push(x)
+           operator →
+               op1 = pop()
+               op2 = pop()
+               E1 = strcat('(', op1, x, op2, ')')
+               push(E1)
+   }
+End
+
+Algorithm pre_post(E)
+   l = length(E)
+   for i = l-1 downto 0
+   {
+       x = next_token(E)
+       case x:
+           operand → push(x)
+           operator →
+               op1 = pop()
+               op2 = pop()
+               E1 = strcat(op1, op2, x)
+               push(E1)
+   }
+End
+
+Algorithm evaluate_postfix(E)
+WHILE more input items exist
+{
+   If symb is operand
+        push(opndstk, symb)
+   else
+   {
+        opnd2 = pop(opndstk)
+        opnd1 = pop(opndstk)
+        value = apply(symb, opnd1, opnd2)
+        push(opndstk, value)
+   }
+}
+Result = pop(opndstk)
