@@ -1,4 +1,4 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
 struct Node{
     int Data;
@@ -18,6 +18,9 @@ void printList(struct Node* head){
     }
 }
 void printListReverse(struct Node* head){
+    if (head == NULL) {
+        return;
+    }
     if (head->next !=  NULL){
         printListReverse(head->next);
     }
