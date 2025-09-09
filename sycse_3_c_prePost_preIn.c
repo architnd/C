@@ -6,7 +6,7 @@
 char s[MAX][MAX];
 int topS = -1;
 
-int isEmptyS() {
+int isEmpty() {
     if (topS == -1) {
         return 1;
     } else {
@@ -14,7 +14,7 @@ int isEmptyS() {
     }
 }
 
-int isFullS() {
+int isFull() {
     if (topS == MAX - 1) {
         return 1;
     } else {
@@ -22,8 +22,8 @@ int isFullS() {
     }
 }
 
-void push_str(char str[MAX]) {
-    if (isFullS()) {
+void push(char *str) { //changed from char str[MAX] to avoid overflow warning
+    if (isFull()) {
         printf("Stack is full!\n");
     } else {
         topS = topS + 1;
@@ -31,8 +31,8 @@ void push_str(char str[MAX]) {
     }
 }
 
-void pop_str(char str[MAX]) {
-    if (isEmptyS()) {
+void pop(char str[MAX]) {
+    if (isEmpty()) {
         printf("Stack is empty!\n");
         str[0] = '\0';
     } else {
@@ -41,86 +41,82 @@ void pop_str(char str[MAX]) {
     }
 }
 
-void pre_infix(char pre[], char infix[]) {
-    int l = strlen(pre);
-    char x;
-    char op1[MAX], op2[MAX], E1[MAX], t[2];
+void pre_infx(char inexp[MAX], char postexp[MAX]) {
+    int i, l;
+    char x[2], op1[MAX], op2[MAX], E1[MAX], op[2];
+    l = strlen(inexp);
 
-    for (int i = l - 1; i >= 0; i--) {
-        x = pre[i];
-        if (isalpha(x) || isdigit(x)) {
-            t[0] = x;
-            t[1] = '\0';
-            push_str(t);
+    for (i = l - 1; i >= 0; i--) {
+        x[0] = inexp[i];
+        x[1] = '\0';
+
+        if (isalpha(x[0]) || isdigit(x[0])) {
+            push(x);
         } else {
-            pop_str(op1);
-            pop_str(op2);
-            strcpy(E1, "(");
+            pop(op1);
+            pop(op2);
+            E1[0] = '\0';
+            strcat(E1, "(");
             strcat(E1, op1);
-            t[0] = x;
-            t[1] = '\0';
-            strcat(E1, t);
+            op[0] = x[0]; op[1] = '\0';
+            strcat(E1, op);
             strcat(E1, op2);
             strcat(E1, ")");
-            push_str(E1);
+            push(E1);
         }
     }
-    pop_str(infix);
+    pop(postexp);
 }
 
-void pre_postfix(char pre[], char postfix[]) {
-    int l = strlen(pre);
-    char x;
-    char op1[MAX], op2[MAX], E1[MAX], t[2];
+void pre_post(char inexp[MAX], char preexp[MAX]) {
+    int i, l;
+    char x[2], op1[MAX], op2[MAX], E1[MAX], op[2];
+    l = strlen(inexp);
 
-    for (int i = l - 1; i >= 0; i--) {
-        x = pre[i];
-        if (isalpha(x) || isdigit(x)) {
-            t[0] = x;
-            t[1] = '\0';
-            push_str(t);
+    for (i = l - 1; i >= 0; i--) {
+        x[0] = inexp[i];
+        x[1] = '\0';
+
+        if (isalpha(x[0]) || isdigit(x[0])) {
+            push(x);
         } else {
-            pop_str(op1);
-            pop_str(op2);
-            strcpy(E1, op1);
+            pop(op1);
+            pop(op2);
+            E1[0] = '\0';
+            strcat(E1, op1);
             strcat(E1, op2);
-            t[0] = x;
-            t[1] = '\0';
-            strcat(E1, t);
-            push_str(E1);
+            op[0] = x[0]; op[1] = '\0';
+            strcat(E1, op);
+            push(E1);
         }
     }
-    pop_str(postfix);
+    pop(preexp);
 }
 
 int main() {
-    char pre[MAX], result[MAX];
+    char inexp[MAX], postexp[MAX], preexp[MAX];
     int ch;
 
     printf("Enter a Prefix expression: ");
-    scanf("%s", pre);
+    scanf("%s", inexp);
 
-    printf("Enter your choice:\n");
-    printf("1. Convert to Infix\n");
-    printf("2. Convert to Postfix\n");
+    printf("Enter your choice: \n");
+    printf("1. Prefix to Infix\n");
+    printf("2. Prefix to Postfix\n");
     scanf("%d", &ch);
 
     switch (ch) {
-        case 1: {
-            pre_infix(pre, result);
-            printf("Infix Expression: %s\n", result);
+        case 1:
+            pre_infx(inexp, postexp);
+            printf("Infix Expression: %s\n", postexp);
             break;
-        }
-        case 2: {
-            pre_postfix(pre, result);
-            printf("Postfix Expression: %s\n", result);
+        case 2:
+            pre_post(inexp, preexp);
+            printf("Postfix Expression: %s\n", preexp);
             break;
-        }
-        default: {
+        default:
             printf("Invalid choice!\n");
             break;
-        }
     }
-
     return 0;
 }
