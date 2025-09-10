@@ -34,7 +34,7 @@ int pop() {
     }
 }
 
-int applyOp(int a, int b, char op) {
+int operate(int a, int b, char op) {
     switch(op) {
         case '+':
             return a + b;
@@ -90,7 +90,7 @@ int evaluatePostfix(char* postfix) {
         else {
             int b = pop();
             int a = pop();
-            int result = applyOp(a, b, ch);
+            int result = operate(a, b, ch);
             push(result);
             i++;
         }
