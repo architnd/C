@@ -1,4 +1,5 @@
-// only for characters, doesn't work properly for spaces or 2 digit nums
+// in_post,in_pre only for characters, doesn't work properly for spaces.
+//code doesn't work for 2 digit nums as well.
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
