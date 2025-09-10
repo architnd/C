@@ -87,7 +87,6 @@ int evaluatePostfix(char* postfix) {
             push(num);
         }
         else {
-            // Operator case
             int b = pop();
             int a = pop();
             int result = applyOp(a, b, ch);
