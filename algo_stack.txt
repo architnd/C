@@ -181,3 +181,224 @@ WHILE more input items exist
    }
 }
 Result = pop(opndstk)
+
+#include <stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX 100
+
+int operandStack[MAX], topOpnd = -1;
+char operatorStack[MAX]; int topOptr = -1;
+
+// Function prototypes
+void pushOperand(int val);
+int popOperand();
+void pushOperator(char op);
+char popOperator();
+int precedence(char op);
+int apply(char op, int a, int b);
+int evaluate_infix(const char* expr);
+
+// Stack operations
+void pushOperand(int val) {
+    operandStack[++topOpnd] = val;
+}
+
+int popOperand() {
+    return operandStack[topOpnd--];
+}
+
+void pushOperator(char op) {
+    operatorStack[++topOptr] = op;
+}
+
+char popOperator() {
+    return operatorStack[topOptr--];
+}
+
+int precedence(char op) {
+    if (op == '+' || op == '-') return 1;
+    if (op == '*' || op == '/') return 2;
+    return 0;
+}
+
+int apply(char op, int a, int b) {
+    switch (op) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '*': return a * b;
+        case '/': return a / b;
+    }
+    return 0;
+}
+
+// Main infix evaluation function
+int evaluate_infix(const char* expr) {
+    int i = 0;
+    while (expr[i] != '\0') {
+        if (isspace(expr[i])) {
+            i++;
+            continue;
+        }
+
+        if (isdigit(expr[i])) {
+            int num = 0;
+            while (isdigit(expr[i])) {
+                num = num * 10 + (expr[i] - '0');
+                i++;
+            }
+            pushOperand(num);
+        } 
+        else if (expr[i] == '(') {
+            pushOperator(expr[i]);
+            i++;
+        }
+        else if (expr[i] == ')') {
+            while (topOptr != -1 && operatorStack[topOptr] != '(') {
+                char op = popOperator();
+                int b = popOperand();
+                int a = popOperand();
+                pushOperand(apply(op, a, b));
+            }
+            popOperator(); // pop '('
+            i++;
+        }
+        else { // operator
+            while (topOptr != -1 && precedence(operatorStack[topOptr]) >= precedence(expr[i])) {
+                char op = popOperator();
+                int b = popOperand();
+                int a = popOperand();
+                pushOperand(apply(op, a, b));
+            }
+            pushOperator(expr[i]);
+            i++;
+        }
+    }
+
+    // Final evaluation
+    while (topOptr != -1) {
+        char op = popOperator();
+        int b = popOperand();
+        int a = popOperand();
+        pushOperand(apply(op, a, b));
+    }
+
+    return popOperand();
+}
+
+int main() {
+    char expr[MAX];
+    printf("Enter infix expression: ");
+    fgets(expr, MAX, stdin);
+    expr[strcspn(expr, "\n")] = 0; // Remove trailing newline
+    int result = evaluate_infix(expr);
+    printf("Result: %d\n", result);
+    return 0;
+}
+
+//complete this code for stack infix evaluation
+// use " %[^\]s" instead of fgets
+
+
+#include <stdio.h>
+#include <stdlib.h>  // for atoi
+#include <ctype.h>
+
+#define MAX 50
+
+// Stack for storing integers
+int stack[MAX];
+int top = -1;
+
+// Stack functions
+int isEmpty() {
+    return top == -1;
+}
+
+int isFull() {
+    return top == MAX - 1;
+}
+
+void push(int item) {
+    if (isFull()) {
+        printf("Stack Overflow\n");
+    }
+    else {
+        stack[++top] = item;
+    }
+}
+
+int pop() {
+    if (!isEmpty()) {
+        return stack[top--];
+    }
+    else {
+        return -1;  // Stack is empty
+    }
+}
+
+// Function to apply the operator to operands
+int applyOp(int a, int b, char op) {
+    switch(op) {
+        case '+': return a + b;
+        case '-': return a - b;
+        case '*': return a * b;
+        case '/': return b != 0 ? a / b : 0;  // Avoid divide by zero
+        case '%': return b != 0 ? a % b : 0;
+        case '^': {
+            int res = 1;
+            for (int i = 0; i < b; i++) res *= a;
+            return res;
+        }
+        default: return 0;
+    }
+}
+
+// Function to evaluate the postfix expression
+int evaluatePostfix(char* postfix) {
+    int i = 0;
+    while (postfix[i] != '\0') {
+        char ch = postfix[i];
+
+        if (isspace(ch)) {
+            i++;
+            continue;
+        }
+
+        if (isdigit(ch)) {
+            int num = 0;
+
+            // Extract the full number (could be multiple digits)
+            while (isdigit(postfix[i])) {
+                num = num * 10 + (postfix[i] - '0');
+                i++;
+            }
+            push(num);
+        }
+        else {
+            // Operator case
+            int b = pop();
+            int a = pop();
+            int result = applyOp(a, b, ch);
+            push(result);
+            i++;
+        }
+    }
+
+    return pop();  // Final result is the only element left in the stack
+}
+
+int main() {
+    char postfix[MAX];
+
+    printf("Enter a postfix expression: ");
+    // Use scanf to read the postfix expression without a newline
+    scanf(" %[^\n]s", postfix);
+
+    int result = evaluatePostfix(postfix);
+    printf("Result = %d\n", result);
+
+    return 0;
+}
