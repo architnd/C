@@ -91,7 +91,7 @@ int evaluatePostfix(char* postfix) {
             int a = pop();
             int result = operate(a, b, ch);
             push(result);
-            i++; //important
+            i++; //
         }
     }
 
