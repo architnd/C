@@ -1,4 +1,3 @@
-//Add spaces between different nums and opreators
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -92,7 +91,7 @@ int evaluatePostfix(char* postfix) {
             int a = pop();
             int result = operate(a, b, ch);
             push(result);
-            i++;
+            i++; //important
         }
     }
 
