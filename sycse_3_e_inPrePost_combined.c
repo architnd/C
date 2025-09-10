@@ -1,3 +1,4 @@
+// only for characters, doesn't work properly for spaces or 2 digit nums
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
