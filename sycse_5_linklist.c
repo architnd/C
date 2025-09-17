@@ -89,7 +89,7 @@ void create_list(struct node **head) {
 }
 void addMember(struct node **head) {
     char designation[20], name[20], ch;
-    int prn;
+    int prn, pos, l;
     printf("Enter designation (p/s/m): ");
     scanf(" %c", &ch);
     if (ch == 'p' || ch == 'P') {
@@ -105,11 +105,18 @@ void addMember(struct node **head) {
         scanf("%d", &prn);
         insert_by_pos(head, get_length(*head), prn, name);
     } else if (ch == 'm' || ch == 'M') {
-        printf("Enter name of member: ");
-        scanf(" %[^\n]s", name);
-        printf("Enter prn of member: ");
-        scanf("%d", &prn);
-        insert_by_pos(head, get_length(*head)-1, prn, name);
+        printf("Enter position of member: ");
+        scanf("%d", &pos);
+        l = get_length(*head);
+        if (pos != 1 || pos != l){
+            printf("Enter name of member: ");
+            scanf(" %[^\n]s", name);
+            printf("Enter prn of member: ");
+            scanf("%d", &prn);
+            insert_by_pos(head, pos - 1, prn, name);
+        }else{
+            printf("Invalid position\n");
+        }
     } else {
         printf("Invalid designation.\n");
     }
@@ -124,15 +131,13 @@ void del_by_pos(struct node **head, int pos) {
 
     struct node *temp = *head;
 
-    // Case 1: Delete at beginning (pos = 0)
     if (pos == 0) {
         *head = temp->next;
         free(temp);
         return;
     }
 
-    // Case 2: Traverse until position-1
-    int i = 1;   // start from 1 because we already handled pos=0
+    int i = 1;
     struct node *prev = temp;
 
     while (i < pos && temp != NULL) {
@@ -140,8 +145,7 @@ void del_by_pos(struct node **head, int pos) {
         temp = temp->next;
         i++;
     }
-
-    if (temp == NULL) return; // Position is out of bounds
+    if (temp == NULL) return;
     if(i == 1){
         temp = temp->next;
         prev->next = temp->next;
@@ -151,7 +155,7 @@ void del_by_pos(struct node **head, int pos) {
     
     free(temp);
 }
-
+#if 1 // swapping pointers
 void sort_by_prn(struct node **head) {
     int len = get_length(*head);
     if (len <= 1) return;
@@ -188,6 +192,35 @@ void sort_by_prn(struct node **head) {
         }
     }
 }
+#endif
+#if 1 //swapping data
+void sort_by_prn2(struct node **head) {
+    int len = get_length(*head);
+    if (len <= 1) return;
+
+    struct node *temp;
+    int i, j, temp_prn;
+    char temp_name[20];
+
+    for (i = 1; i < len; i++) {
+        temp = *head;
+        for (j = 0; j < len - i; j++) {
+            struct node *next = temp->next;
+            if (next == NULL) break;
+            if (temp->prn > next->prn) {
+                temp_prn = temp->prn;
+                strcpy(temp_name, temp->name);
+                temp->prn = next->prn;
+                strcpy(temp->name, next->name);
+                next->prn = temp_prn;
+                strcpy(next->name, temp_name);
+            }
+            temp = temp->next;
+        }
+    }
+}
+#endif
+#if 1 //merged list stored in list 1
 void merge_lists(struct node **head, struct node **head2) {
     struct node *curr1 = *head;
     struct node *curr2 = *head2;
@@ -239,6 +272,54 @@ void merge_lists(struct node **head, struct node **head2) {
         *head2 = NULL;
     }
 }
+#endif
+#if 1   //merged list stored in list 3
+void merge_lists2(struct node **head1, struct node **head2, struct node **head3) {
+    struct node *curr1 = *head1;
+    struct node *curr2 = *head2;
+    int prn;
+    char name[20];
+    if (curr1 == NULL) {
+        *head3 = *head2;
+        *head1 = NULL;
+        *head2 = NULL;
+        return;
+    }
+    if (curr2 == NULL) {
+        *head3 = *head1;
+        *head1 = NULL;
+        *head2 = NULL;
+        return;
+    }
+    while (curr1 != NULL && curr2 != NULL) {
+        if (curr1->prn < curr2->prn) {
+            // Insert current node from list 1 into head3
+            prn = curr1->prn;
+            strcpy(name, curr1->name);
+            insert_by_pos(head3, get_length(*head3), prn, name);
+            curr1 = curr1->next;
+        } else {
+            // Insert current node from list 2 into head3
+            prn = curr2->prn;
+            strcpy(name, curr2->name);
+            insert_by_pos(head3, get_length(*head3), prn, name);
+            curr2 = curr2->next;
+        }
+    }
+    while (curr1 != NULL) {
+        prn = curr1->prn;
+        strcpy(name, curr1->name);
+        insert_by_pos(head3, get_length(*head3), prn, name);
+        curr1 = curr1->next;
+    }
+    while (curr2 != NULL) {
+        prn = curr2->prn;
+        strcpy(name, curr2->name);
+        insert_by_pos(head3, get_length(*head3), prn, name);
+        curr2 = curr2->next;
+    }
+}
+#endif
 void reverse_list(struct node **head) {
     struct node *prev = NULL;
     struct node *curr = *head;
@@ -251,6 +332,39 @@ void reverse_list(struct node **head) {
         curr = temp;
     }
     *head = prev;
+}
+void concat_list(struct node **head, struct node **head2) {
+    if (*head == NULL) {
+        *head = *head2;
+        *head2 = NULL;
+        return;
+    }
+    if (*head2 == NULL) {
+        return;
+    }
+    struct node *temp = *head;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+    temp->next = *head2;
+    *head2 = NULL;
+}
+
+int compare_lists(struct node **head, struct node **head2) {
+    struct node *temp = *head;
+    struct node *temp2 = *head2;
+    while (temp != NULL && temp2 != NULL) {
+        int cmp = strcmp(temp->name, temp2->name);
+        if (temp->prn != temp2->prn || cmp != 0) {
+            return 0;
+        }
+        temp = temp->next;
+        temp2 = temp2->next;
+    }
+    if (temp == NULL && temp2 == NULL) {
+        return 1;
+    }
+    return 0;
 }
 void display_list(struct node *head) {
     if (head == NULL) {
@@ -286,18 +400,23 @@ void display_list(struct node *head) {
 int main(){
     struct node *head = NULL;
     struct node *head2 = NULL;
+    struct node *head3 = NULL;
     int ch, pos;
     do{
-        printf("Pinnacle Club Membership:\n");
+        printf("\nPinnacle Club Membership:\n");
         printf("1. Create List.\n");
         printf("2. Display List.\n");
         printf("3. Add member.\n");
         printf("4. Delete member.\n");
-        printf("5. Total Members\n");
-        printf("6. Sort list.\n");
-        printf("7. Merge lists.\n");
-        printf("8. Reverse list.\n");
-        printf("9. Exit\n");
+        printf("5. Total Members.\n");
+        printf("6. Sort list by pointers.\n");
+        printf("7. Sort list by data.\n");
+        printf("8. Merge lists in list 1.\n");
+        printf("9. Merge lists in list 3.\n");
+        printf("10. Reverse list.\n");
+        printf("11. Concat List.\n");
+        printf("12. Compare lists. \n");
+        printf("13. Exit.\n");
         printf("Enter your choice: ");
         scanf("%d", &ch);
         switch(ch){
@@ -305,7 +424,17 @@ int main(){
                 create_list(&head);
                 break;
             case 2:
-                display_list(head);
+                printf("Display list number(1/2/3): ");
+                scanf("%d", &pos);
+                if (pos == 1){
+                    display_list(head);
+                }
+                else if (pos == 2){
+                    display_list(head2);
+                }
+                else if (pos == 3){
+                    display_list(head3);
+                }
                 break;
             case 3:
                 addMember(&head);
@@ -320,28 +449,54 @@ int main(){
                 break;
             case 6:
                 sort_by_prn(&head);
+                printf("List sorted.");
                 break;
             case 7:
+                sort_by_prn2(&head);
+                printf("List sorted.");
+                break;
+            case 8:
                 printf("Creating 2nd list:\n");
                 create_list(&head2);
-                printf("2nd list created. \n");
                 sort_by_prn(&head);
-                printf("First list sorted.\n");
                 sort_by_prn(&head2);
-                printf("Second list sorted.\n");
                 merge_lists(&head, &head2);
                 printf("Lists merged.\n");
                 break;
-            case 8:
-                reverse_list(&head);
-                break; 
             case 9:
+                printf("Creating 2nd list:\n");
+                create_list(&head2);
+                sort_by_prn(&head);
+                sort_by_prn(&head2);
+                merge_lists2(&head, &head2, &head3);
+                printf("Lists merged.\n");
+                break;
+            case 10:
+                reverse_list(&head);
+                printf("List reversed.\n");
+                break;
+            case 11:
+                printf("Creating 2nd list:\n");
+                create_list(&head2);
+                concat_list(&head, &head2);
+                printf("Lists concatenated.\n");
+                break;
+            case 12:
+                printf("Creating 2nd list:\n");
+                create_list(&head2);
+                if(compare_lists(&head, &head2)){
+                    printf("\nLists are Equal.\n");
+                }else{
+                    printf("\nLists are Different.\n");
+                }
+                break;
+            case 13:
                 printf("Exiting...\n");
                 break;
             default:
                 printf("Invalid choice\n");
                 break;
         }
-    } while (ch != 9);
+    } while (ch != 13);
     return 0;
 }

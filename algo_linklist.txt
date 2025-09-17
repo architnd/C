@@ -153,3 +153,132 @@ Algorithm merge(*H1, *H2)
    if(flag == 1) display(head1);
    else display(head2);
 }
+void merge_lists(struct node **head1, struct node **head2, struct node **head3) {
+    struct node *curr1 = *head1;
+    struct node *curr2 = *head2;
+    int prn;
+    char name[50];
+
+    // If one of the lists is empty, the merged list is just the other list
+    if (curr1 == NULL) {
+        *head3 = *head2;  // Copy second list to head3
+        *head1 = NULL;
+        *head2 = NULL;
+        return;
+    }
+    if (curr2 == NULL) {
+        *head3 = *head1;  // Copy first list to head3
+        *head1 = NULL;
+        *head2 = NULL;
+        return;
+    }
+
+    // Merge the lists using insert_by_pos to maintain order in head3
+    while (curr1 != NULL && curr2 != NULL) {
+        if (curr1->prn < curr2->prn) {
+            // Insert current node from list 1 into head3
+            prn = curr1->prn;
+            strcpy(name, curr1->name);
+            insert_by_pos(head3, get_length(*head3), prn, name);  // Insert at the end of head3
+            curr1 = curr1->next;
+        } else {
+            // Insert current node from list 2 into head3
+            prn = curr2->prn;
+            strcpy(name, curr2->name);
+            insert_by_pos(head3, get_length(*head3), prn, name);  // Insert at the end of head3
+            curr2 = curr2->next;
+        }
+    }
+
+    // If there are remaining nodes in list1
+    while (curr1 != NULL) {
+        prn = curr1->prn;
+        strcpy(name, curr1->name);
+        insert_by_pos(head3, get_length(*head3), prn, name);  // Insert at the end of head3
+        curr1 = curr1->next;
+    }
+
+    // If there are remaining nodes in list2
+    while (curr2 != NULL) {
+        prn = curr2->prn;
+        strcpy(name, curr2->name);
+        insert_by_pos(head3, get_length(*head3), prn, name);  // Insert at the end of head3
+        curr2 = curr2->next;
+    }
+
+    // Set the other lists to NULL (they are now merged)
+    *head1 = NULL;
+    *head2 = NULL;
+}
+void sort_by_prn(struct node **head) {
+    int len = get_length(*head);
+    if (len <= 1) return;
+
+    struct node *temp;
+    int i, j;
+
+    // Outer loop to go through each node
+    for (i = 1; i < len; i++) {
+        temp = *head;  // Start from the head for each iteration
+
+        // Inner loop for pairwise comparison
+        for (j = 0; j < len - i; j++) {
+            struct node *next = temp->next;
+            if (next == NULL) break;
+
+            // If current node's prn > next node's prn, swap data
+            if (temp->prn > next->prn) {
+                // Swap the PRN and Name between temp and next
+                int temp_prn = temp->prn;
+                char temp_name[50];
+                strcpy(temp_name, temp->name);  // Save the name of temp
+
+                // Swap the PRN
+                temp->prn = next->prn;
+                strcpy(temp->name, next->name);  // Swap the name
+
+                next->prn = temp_prn;
+                strcpy(next->name, temp_name);  // Restore the name for next
+
+            }
+
+            // Move to the next node
+            temp = temp->next;
+        }
+    }
+}
+
+int compare_lists(struct node **head, struct node **head2) {
+    struct node *temp = *head;
+    struct node *temp2 = *head2;
+    while (temp != NULL && temp2 != NULL) {
+        int cmp = strcmp(temp->name, temp2->name);
+        if (temp->prn != temp2->prn || cmp != 0) {
+            return 0;
+        }
+        temp = temp->next;
+        temp2 = temp2->next;
+    }
+    if (temp == NULL && temp2 == NULL) {
+        return 1;  // Lists are equal
+    }
+    return 0;
+}
+
+int compare_lists(struct node **head, struct node **head2){
+    struct node *temp = *head;
+    struct node *temp2 = *head2;
+    int cmp;
+    while (temp != NULL && temp2 != NULL) {
+        int cmp = strcmp(temp->name, temp2->name);
+        if (temp->prn == temp2->prn && cmp == 0){
+            temp = temp->next;
+            temp2 = temp2->next;
+        } else{
+            return 0;
+        }
+    }
+    if (temp == NULL && temp2 == NULL){
+        return 1;
+    }
+}
