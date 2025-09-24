@@ -102,7 +102,8 @@ int main() {
     char postfix[MAX];
 
     printf("Enter a postfix expression: ");
-    scanf(" %[^\n]s", postfix);
+    scanf(" %[^\n]", postfix);
+    getchar();
 
     int result = evaluatePostfix(postfix);
     printf("Result = %d\n", result);

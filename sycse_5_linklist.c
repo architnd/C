@@ -65,12 +65,14 @@ void create_list(struct node **head) {
     int prn;
     char name[20], ch;
     printf("Enter name of president: ");
-    scanf(" %[^\n]s", name);
+    scanf(" %[^\n]", name);
+    getchar();
     printf("Enter prn of president: ");
     scanf("%d", &prn);
     insert_by_pos(head, 0, prn, name);
     printf("Enter name of secretary: ");
-    scanf(" %[^\n]s", name);
+    scanf(" %[^\n]", name);
+    getchar();
     printf("Enter prn of secretary: ");
     scanf("%d", &prn);
     insert_by_pos(head, get_length(*head), prn, name);
@@ -79,7 +81,8 @@ void create_list(struct node **head) {
     scanf(" %c", &ch);
     while(ch == 'y' || ch == 'Y'){
         printf("Enter name of member: ");
-        scanf(" %[^\n]s", name);
+        scanf(" %[^\n]", name);
+        getchar();
         printf("Enter prn of member: ");
         scanf("%d", &prn);
         insert_by_pos(head, get_length(*head)-1, prn, name);
@@ -94,13 +97,15 @@ void addMember(struct node **head) {
     scanf(" %c", &ch);
     if (ch == 'p' || ch == 'P') {
         printf("Enter name of president: ");
-        scanf(" %[^\n]s", name);
+        scanf(" %[^\n]", name);
+        getchar();
         printf("Enter prn of president: ");
         scanf("%d", &prn);
         insert_by_pos(head, 0, prn, name);
     } else if (ch == 's' || ch == 'S') {
         printf("Enter name of secretary: ");
-        scanf(" %[^\n]s", name);
+        scanf(" %[^\n]", name);
+        getchar();
         printf("Enter prn of secretary: ");
         scanf("%d", &prn);
         insert_by_pos(head, get_length(*head), prn, name);
@@ -110,7 +115,8 @@ void addMember(struct node **head) {
         l = get_length(*head);
         if (pos != 1 || pos != l){
             printf("Enter name of member: ");
-            scanf(" %[^\n]s", name);
+            scanf(" %[^\n]", name);
+            getchar();
             printf("Enter prn of member: ");
             scanf("%d", &prn);
             insert_by_pos(head, pos - 1, prn, name);
