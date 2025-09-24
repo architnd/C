@@ -402,3 +402,5 @@ int main() {
 
     return 0;
 }
+
+https://docs.google.com/presentation/d/1r2qXXulAxUfIROL5fk60ClezY7e3LWRoiJFBQHVudbE/edit?usp=drivesdk
