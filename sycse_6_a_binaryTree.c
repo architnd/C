@@ -253,7 +253,7 @@ void BFS(treenode *root) {
 
 int main() {
     treenode *root = NULL;
-    int choice;
+    int ch;
     
     do {
         printf("\n1. Create Binary Tree Recursively.\n");
@@ -267,9 +267,9 @@ int main() {
         printf("9. Breadth First Traversal.\n");
         printf("10. Exit.\n");
         printf("Enter your choice: ");
-        scanf(" %d", &choice);
+        scanf(" %d", &ch);
         
-        switch(choice) {
+        switch(ch) {
             case 1:
                 if (root != NULL) {
                     printf("Binary tree already exists.\n");
@@ -344,6 +344,6 @@ int main() {
                 printf("Invalid choice\n");
                 break;
         }
-    } while(choice != 10);
+    } while(ch != 10);
     return 0;
 }
