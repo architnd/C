@@ -342,7 +342,6 @@ void mirror_nr(BST *root) {
             enqueue(temp->right);
         }
     } 
-    dispbfs(root);
 }
 
 BST* copy_r(BST *root) {
@@ -473,7 +472,7 @@ BST* copy_nr(BST *root2) {
 int main() {
     BST *root = NULL;
     BST *copied_root = NULL;
-    int ch;
+    int ch, ch1;
     char keyword[10];
 
     do {
@@ -563,9 +562,24 @@ int main() {
                     printf("Dictionary is empty.\n");
                     break;
                 }
-                printf("Displaying dictionary (BFS): \n");
-                dispbfs(root);
-                printf("\n");
+                if (copied_root != NULL){
+                    printf("\nDo you want to display: \n1. Original Dictionary.\n2.Copied Dictionary.\n");
+                    scanf("%d", &ch1);
+                    if(ch1 == 1){
+                        printf("Displaying dictionary (BFS): \n");
+                        dispbfs(root);
+                        printf("\n");
+                    }
+                    else if(ch1 == 2){
+                        printf("Displaying copied dictionary (BFS): \n");
+                        dispbfs(copied_root);
+                        printf("\n");
+                    }
+                }else{
+                    printf("Displaying dictionary (BFS): \n");
+                    dispbfs(root);
+                    printf("\n");
+                }
                 break;
             case 11:
                 printf("Exiting...\n");
